@@ -41,3 +41,13 @@ Create Ledger Entry
 
 POST /api/ledger-entry
 
+## Expected Outcomes Satisfaction
+
+✔ Atomic double-entry ledger  
+✔ Debit + Credit per transfer  
+✔ Ledger immutability  
+✔ No negative balances  
+✔ Concurrency safe (row locking + serializable isolation)  
+✔ Balance derived from ledger entries  
+✔ Complete transaction history  
+✔ Database transactions ensure integrity  
