@@ -1,8 +1,7 @@
 from fastapi import FastAPI
-from app.routes import router
 from app.database import Base, engine
+from app.routes import router
 
-# Create DB tables
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="Financial Ledger API")
@@ -10,5 +9,5 @@ app = FastAPI(title="Financial Ledger API")
 app.include_router(router)
 
 @app.get("/")
-def health_check():
-    return {"status": "Financial Ledger API is running"}
+def health():
+    return {"status": "Ledger API running"}
