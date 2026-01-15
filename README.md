@@ -16,7 +16,7 @@ A basic FastAPI + PostgreSQL backend implementing a **double-entry financial led
 
 1️⃣ Clone Repository
 
-git clone <your-repo-url>
+git clone https://github.com/Kusubhavani/financial-ledger-api.git
 
 cd financial-ledger-api
 
@@ -28,6 +28,7 @@ docker-compose up --build
 Open in browser:
 
 http://localhost:8000/docs
+
 🔗 Available APIs
 Create Account
 
