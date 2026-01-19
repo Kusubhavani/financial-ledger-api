@@ -11,7 +11,7 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./init-db.sql:/docker-entrypoint-initdb.d/init.sql
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 10s
@@ -24,12 +24,60 @@ services:
       - "8000:8000"
     environment:
       DATABASE_URL: postgresql://postgres:password@postgres:5432/financial_ledger
-      APP_NAME: Financial Ledger API
+      DEBUG: "True"
     depends_on:
       postgres:
         condition: service_healthy
     volumes:
       - ./src:/app/src
+      - ./alembic:/app/alembic
+      - ./alembic.ini:/app/alembic.ini
+    command: >
+      sh -c "
+      echo 'Waiting for database...' &&
+      sleep 5 &&
+      echo 'Running migrations...' &&
+      alembic upgrade head &&
+      echo 'Starting API server...' &&
+      uvicorn src.main:app --host 0.0.0.0 --port 8000 --reload
+      "
+
+  migration-runner:
+    build: .
+    depends_on:
+      - postgres
+    environment:
+      DATABASE_URL: postgresql://postgres:password@postgres:5432/financial_ledger
+    volumes:
+      - ./alembic:/app/alembic
+      - ./alembic.ini:/app/alembic.ini
+    command: >
+      sh -c "
+      echo 'Waiting for database...' &&
+      sleep 10 &&
+      echo 'Running migrations...' &&
+      alembic upgrade head &&
+      echo 'Migrations completed'
+      "
+    restart: "no"
+
+  seed-db:
+    build: .
+    depends_on:
+      - postgres
+      - migration-runner
+    environment:
+      DATABASE_URL: postgresql://postgres:password@postgres:5432/financial_ledger
+    volumes:
+      - ./src:/app/src
+      - ./scripts:/app/scripts
+    command: >
+      sh -c "
+      echo 'Seeding database...' &&
+      python scripts/seed_database.py &&
+      echo 'Database seeding completed'
+      "
+    restart: "no"
 
 volumes:
   postgres_data:
