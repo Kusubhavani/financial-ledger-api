@@ -33,20 +33,22 @@ atomic transfers, balance integrity, and concurrency safety.
 ```
 
 Double-entry-booking/
+├── alembic/ # Database migrations
+├── scripts/ # Utility / helper scripts
+├── src/ # Application source code
+│ ├── init.py
+│ ├── database.py
+│ ├── models.py
+│ ├── routes.py
+│ └── services.py
 │
-├── app/
-│   ├── **init**.py
-│   ├── main.py
-│   ├── database.py
-│   ├── models.py
-│   └── routes.py
-│
+├── tests/ # Unit & integration tests
+├── main.py # FastAPI entry point
 ├── Dockerfile
 ├── docker-compose.yml
 ├── requirements.txt
-└── README.md
-
-````
+├── .env.example
+└── Readme.md
 
 ---
 
